@@ -30,7 +30,7 @@ Sass is used for styling. All `.scss` files are compliled into `.css` in the sam
 |------|-------------|--------|
 | CODERALLY_APP_API_URL | API url | http://localhost:3003/api/v1 |
 
-*CODERALLY_APP_API_URL* can be substituted with *https://coderally.appspot.com/api/v1* if you are only working on this project and **not** the backend project. However, this app must be served on port **3000** to pass the whitelisting.
+*CODERALLY_APP_API_URL* can be substituted with *https://coderally-98c5c.appspot.com/api/v1* if you are only working on this project and **not** the backend project. However, this app must be served on port **3000** to pass the whitelisting.
 
 The backend is live at that url.
 
