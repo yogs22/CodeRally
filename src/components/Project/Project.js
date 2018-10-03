@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AppService from '../../services/AppService';
+import './Project.css';
 
 export default class Project extends Component {
   constructor(props) {
@@ -22,15 +23,17 @@ export default class Project extends Component {
     const { project } = this.state;
     return (
       <div>
-        <h1>{project ? project.name : ''}</h1>
-        <b>Description</b>
-        <p>{project ? project.description : ''}</p>
-        <b>Tech Stack</b>
-        <p>{project ? project.tech : ''}</p>
-        <b>Website</b>
-        <p>{project ? project.link : ''}</p>
-        <b>Looking for partners</b>
-        <p>{project ? project.partners : ''}</p>
+        <div className="card">
+          <h1>{project ? project.name : ''}</h1>
+          <b>Description</b>
+          <p>{project ? project.description : ''}</p>
+          <b>Tech Stack</b>
+          <p>{project ? project.tech : ''}</p>
+          <b>Website</b>
+          <p>{project ? project.link : ''}</p>
+          <b>Looking for partners</b>
+          <p>{project ? project.partners : ''}</p>
+        </div>
       </div>
     );
   }
