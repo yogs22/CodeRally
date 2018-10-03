@@ -6,7 +6,7 @@ Powered by [https://reactjs.org/](React).
 
 Hosted at https://coderally.netlify.com on [Netlify](https://www.netlify.com/).
 
-The NodeJs, ExpressJS backend for this project is located here: https://github.com/TheWillG/CodeRally.git.
+The NodeJs, ExpressJS backend for this project is located here: https://github.com/TheWillG/CodeRally-API.git.
 
 ## Install
 
