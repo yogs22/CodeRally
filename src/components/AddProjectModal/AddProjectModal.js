@@ -7,8 +7,11 @@ import deepPurple from '@material-ui/core/colors/deepPurple';
 import grey from '@material-ui/core/colors/grey';
 import AppService from '../../services/AppService';
 
+import { validateUrl } from '../../utils';
+
 const SNACKBAR_SUCCESS_MESSAGE = 'Submitted. After a quick review, your project will be listed!';
 const SNACKBAR_FAILURE_MESSAGE = 'Project failed to be added!';
+const SNACKBAR_LINK_ERROR = 'Error validating website link!';
 
 function getModalStyle() {
   const top = 50;
@@ -56,6 +59,7 @@ class AddProjectModal extends Component {
       partners: '',
       tech: '',
       link: '',
+      showLinkError: false,
     };
     this.fetchProjects = props.fetchProjects;
     this.renderSnackbar = props.renderSnackbar;
@@ -85,7 +89,11 @@ class AddProjectModal extends Component {
   }
 
   handleLinkChange(e) {
-    this.setState({ link: e.target.value });
+    if (validateUrl(e.target.value)) {
+      this.setState({ link: e.target.value, showLinkError: false });
+    } else {
+      this.setState({ link: e.target.value, showLinkError: true });
+    }
   }
 
   handleClose() {
@@ -95,6 +103,12 @@ class AddProjectModal extends Component {
 
   async handleSubmit() {
     const { renderSnackbar } = this.props;
+    const { showLinkError } = this.state;
+    if (showLinkError) {
+      const snackbarText = SNACKBAR_LINK_ERROR;
+      renderSnackbar({ snackbarText });
+      return;
+    }
     try {
       await AppService.postProject(this.state);
       this.setState({
@@ -116,7 +130,7 @@ class AddProjectModal extends Component {
 
   render() {
     const {
-      name, description, partners, tech, link,
+      name, description, partners, tech, link, showLinkError,
     } = this.state;
     const { open, classes } = this.props;
     return (
@@ -136,7 +150,7 @@ class AddProjectModal extends Component {
             <TextField fullWidth label="What partners are you looking for?" value={partners} onChange={this.handlePartnersChange} />
             <br />
             <br />
-            <TextField fullWidth label="Website" value={link} onChange={this.handleLinkChange} />
+            <TextField error={showLinkError} helperText={showLinkError ? 'Please enter a valid https url' : ''} fullWidth label="Website" value={link} onChange={this.handleLinkChange} />
             <br />
             <br />
             <div style={{ textAlign: 'center' }}>
