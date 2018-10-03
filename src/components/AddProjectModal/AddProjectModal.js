@@ -103,14 +103,22 @@ class AddProjectModal extends Component {
 
   async handleSubmit() {
     const { renderSnackbar } = this.props;
-    const { showLinkError } = this.state;
+    const {
+      showLinkError, name, description, partners, tech, link,
+    } = this.state;
     if (showLinkError) {
       const snackbarText = SNACKBAR_LINK_ERROR;
       renderSnackbar({ snackbarText });
       return;
     }
     try {
-      await AppService.postProject(this.state);
+      await AppService.postProject({
+        name,
+        description,
+        partners,
+        tech,
+        link,
+      });
       this.setState({
         name: '',
         description: '',
