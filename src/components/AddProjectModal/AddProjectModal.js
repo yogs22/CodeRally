@@ -124,19 +124,19 @@ class AddProjectModal extends Component {
         <Modal open={open} onClose={this.handleClose}>
           <div className={classes.paper} style={getModalStyle()}>
             <h2>List Project</h2>
-            <TextField fullWidth="true" label="Project Name" value={name} onChange={this.handleNameChange} />
+            <TextField fullWidth label="Project Name" value={name} onChange={this.handleNameChange} />
             <br />
             <br />
-            <TextField fullWidth="true" label="Description" value={description} onChange={this.handleDescriptionChange} />
+            <TextField fullWidth label="Description" value={description} onChange={this.handleDescriptionChange} />
             <br />
             <br />
-            <TextField fullWidth="true" label="Tech Stack" value={tech} onChange={this.handleTechChange} />
+            <TextField fullWidth label="Tech Stack" value={tech} onChange={this.handleTechChange} />
             <br />
             <br />
-            <TextField fullWidth="true" label="What partners are you looking for?" value={partners} onChange={this.handlePartnersChange} />
+            <TextField fullWidth label="What partners are you looking for?" value={partners} onChange={this.handlePartnersChange} />
             <br />
             <br />
-            <TextField fullWidth="true" label="Website" value={link} onChange={this.handleLinkChange} />
+            <TextField fullWidth label="Website" value={link} onChange={this.handleLinkChange} />
             <br />
             <br />
             <div style={{ textAlign: 'center' }}>
