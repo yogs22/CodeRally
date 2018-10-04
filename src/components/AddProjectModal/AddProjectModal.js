@@ -143,6 +143,7 @@ class AddProjectModal extends Component {
         partners: '',
         tech: '',
         link: '',
+        repoLink: '',
       });
       const snackbarText = SNACKBAR_SUCCESS_MESSAGE;
       renderSnackbar({ snackbarText });

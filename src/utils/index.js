@@ -7,7 +7,7 @@ export const validateUrl = (url) => {
 };
 
 export const validateRepoLink = (link) => {
-  const urlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
+  const urlRegex = /^((git|ssh|http(s)?)|(git@[\w\.]+))(:(\/\/)?)([\w\.@\:\/\-~]+)(\.git)(\/)?$/;
   if (urlRegex.test(link)) {
     return true;
   }
