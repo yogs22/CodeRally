@@ -2,11 +2,20 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 0 auto;
     margin-top: 100px;
-    text-align: center;
+    text-align: left;
     transition: 0.3s;
     width: 500px;
+    padding: 10px;
 }
 
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.title {
+    margin-bottom: 20px !important;
+    text-align: center !important;
+}
+.description {
+    margin-top: 10px !important;
 }

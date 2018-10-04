@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import AppService from '../../services/AppService';
 import './Project.css';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
 export default class Project extends Component {
   constructor(props) {
@@ -21,20 +24,29 @@ export default class Project extends Component {
 
   render() {
     const { project } = this.state;
+    const { classes } = this.props;
+    const bull = <span className="bullet">•</span>;
+  
     return (
-      <div>
-        <div className="card">
-          <h1>{project ? project.name : ''}</h1>
-          <b>Description</b>
-          <p>{project ? project.description : ''}</p>
-          <b>Tech Stack</b>
-          <p>{project ? project.tech : ''}</p>
-          <b>Website</b>
-          <p>{project ? project.link : ''}</p>
-          <b>Looking for partners</b>
-          <p>{project ? project.partners : ''}</p>
-        </div>
-      </div>
+      <Card className="card">
+      <CardContent>
+        <Typography className="title" variant="headline" component="h1">
+          {project ? project.name : ''}
+        </Typography>
+        <Typography className="description" component="p">
+          {bull} <b>Description :</b> {project ? project.description : ''}
+        </Typography>
+        <Typography className="description" component="p">
+          {bull} <b>Tech Stack :</b> {project ? project.tech : ''}
+        </Typography>
+        <Typography className="description" component="p">
+          {bull} <b>Website :</b> {project && project.desclinkription ? project.desclinkription : 'none'}
+        </Typography>
+        <Typography className="description" component="p">
+          {bull} <b>Looking for partners :</b> {project ? project.partners : ''}
+        </Typography>
+      </CardContent>
+    </Card>
     );
   }
 }
