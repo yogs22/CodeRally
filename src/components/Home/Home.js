@@ -14,6 +14,7 @@ import lightBlue from '@material-ui/core/colors/lightBlue';
 import grey from '@material-ui/core/colors/grey';
 import AddProjectModal from '../AddProjectModal/AddProjectModal';
 import AppService from '../../services/AppService';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   root: {
@@ -50,22 +51,26 @@ class Home extends Component {
     this.state = {
       modalOpen: false,
       snackbarOpen: false,
+      initialProjects: [],
       projects: [],
       snackbarText: '',
+      query: '',
     };
     this.addProject = this.addProject.bind(this);
     this.modalClosed = this.modalClosed.bind(this);
     this.fetchProjects = this.fetchProjects.bind(this);
     this.renderSnackbar = this.renderSnackbar.bind(this);
+    this.filterProject = this.filterProject.bind(this);
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     this.fetchProjects();
   }
 
   async fetchProjects() {
     const projects = await AppService.getProjects();
     this.setState({ projects });
+    this.setState({ initialProjects: projects });
   }
 
   addProject() {
@@ -85,11 +90,32 @@ class Home extends Component {
     }, 5000);
   }
 
+  filterProject(event) {
+    var updatedProject = this.state.initialProjects;
+    updatedProject = updatedProject.filter(function(item) {
+      const query = event.target.value.toLowerCase();
+
+      return(
+        item.name.toLowerCase().indexOf(query) >= 0 ||
+        item.description.toLowerCase().indexOf(query) >= 0 ||
+        item.tech.toLowerCase().indexOf(query) >= 0
+      );
+    });
+    this.setState({projects: updatedProject});
+  }
+
   renderProjects() {
     const { projects } = this.state;
     const { classes } = this.props;
+
     return (
       <Paper className={classes.root}>
+        <TextField
+          label="Search"
+          className={classes.textField}
+          margin="normal"
+          onChange={this.filterProject}
+        />
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
