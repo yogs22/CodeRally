@@ -2,9 +2,10 @@
 
 A project listing board for app and web developers
 
-Powered by [https://reactjs.org/](React).
+Hosted at https://coderally.co/
 
-Hosted at https://coderally.netlify.com on [Netlify](https://www.netlify.com/).
+## Technology
+Powered by [https://reactjs.org/](React).
 
 The NodeJs, ExpressJS backend for this project is located here: https://github.com/TheWillG/CodeRally-API.git.
 
