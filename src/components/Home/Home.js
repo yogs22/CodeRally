@@ -104,7 +104,7 @@ class Home extends Component {
               projects.map(({
                 name, description, tech,
               }) => (
-                <TableRow>
+                <TableRow key={name}>
                   <TableCell>{name}</TableCell>
                   <TableCell>{description}</TableCell>
                   <TableCell>{tech}</TableCell>
