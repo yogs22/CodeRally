@@ -1,5 +1,7 @@
 ![coderally Logo](./docs/logo.png)
 
+[![join chat](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/coderally/Lobby)
+
 A project listing board for app and web developers
 
 Hosted at https://coderally.co/
