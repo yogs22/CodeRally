@@ -8,6 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import lightBlue from '@material-ui/core/colors/lightBlue';
@@ -48,6 +49,7 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loadingProjects: true,
       modalOpen: false,
       snackbarOpen: false,
       projects: [],
@@ -65,7 +67,7 @@ class Home extends Component {
 
   async fetchProjects() {
     const projects = await AppService.getProjects();
-    this.setState({ projects });
+    this.setState({ projects, loadingProjects: false });
   }
 
   addProject() {
@@ -86,7 +88,7 @@ class Home extends Component {
   }
 
   renderProjects() {
-    const { projects } = this.state;
+    const { projects, loadingProjects } = this.state;
     const { classes } = this.props;
     return (
       <Paper className={classes.root}>
@@ -99,20 +101,23 @@ class Home extends Component {
               <TableCell>Project Page</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {
-              projects.map(({
-                name, description, tech,
-              }) => (
-                <TableRow key={name}>
-                  <TableCell>{name}</TableCell>
-                  <TableCell>{description}</TableCell>
-                  <TableCell>{tech}</TableCell>
-                  <TableCell><Button className={classes.button} href={`/projects/${name}`}>View</Button></TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
+          {!loadingProjects && (
+            <TableBody>
+              {
+                projects.map(({
+                  name, description, tech,
+                }) => (
+                  <TableRow key={name}>
+                    <TableCell>{name}</TableCell>
+                    <TableCell>{description}</TableCell>
+                    <TableCell>{tech}</TableCell>
+                    <TableCell><Button className={classes.button} href={`/projects/${name}`}>View</Button></TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          )}
         </Table>
+        {loadingProjects && <LinearProgress />}
       </Paper>
     );
   }
