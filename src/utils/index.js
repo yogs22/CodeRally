@@ -6,6 +6,15 @@ export const validateUrl = (url) => {
   return false;
 };
 
+export const validateRepoLink = (link) => {
+  const urlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
+  if (urlRegex.test(link)) {
+    return true;
+  }
+  return false;
+};
+
 export default {
   validateUrl,
+  validateRepoLink,
 };
