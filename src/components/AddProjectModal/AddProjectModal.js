@@ -116,7 +116,7 @@ class AddProjectModal extends Component {
   async handleSubmit() {
     const { renderSnackbar } = this.props;
     const {
-      showLinkError, showRepoLinkError, name, description, partners, tech, link,
+      showLinkError, showRepoLinkError, name, description, partners, tech, link, repoLink,
     } = this.state;
     if (showLinkError) {
       const snackbarText = SNACKBAR_LINK_ERROR;
@@ -135,6 +135,7 @@ class AddProjectModal extends Component {
         partners,
         tech,
         link,
+        repoLink,
       });
       this.setState({
         name: '',
