@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import grey from '@material-ui/core/colors/grey';
@@ -61,6 +62,7 @@ class AddProjectModal extends Component {
       tech: '',
       link: '',
       repoLink: '',
+      loading: false,
       showLinkError: false,
       showRepoLinkError: false,
     };
@@ -128,6 +130,7 @@ class AddProjectModal extends Component {
       renderSnackbar({ snackbarText });
       return;
     }
+    this.setState({ loading: true });
     try {
       await AppService.postProject({
         name,
@@ -144,12 +147,14 @@ class AddProjectModal extends Component {
         tech: '',
         link: '',
         repoLink: '',
+        loading: false,
       });
       const snackbarText = SNACKBAR_SUCCESS_MESSAGE;
       renderSnackbar({ snackbarText });
       this.handleClose();
     } catch (e) {
       console.log('Failed to validate', e);
+      this.setState({ loading: false });
       const snackbarText = SNACKBAR_FAILURE_MESSAGE;
       renderSnackbar({ snackbarText });
     }
@@ -157,7 +162,7 @@ class AddProjectModal extends Component {
 
   render() {
     const {
-      name, description, partners, tech, link, repoLink, showLinkError, showRepoLinkError,
+      name, description, partners, tech, link, repoLink, showLinkError, showRepoLinkError, loading
     } = this.state;
     const { open, classes } = this.props;
     return (
@@ -165,6 +170,7 @@ class AddProjectModal extends Component {
         <Modal open={open} onClose={this.handleClose}>
           <div className={classes.paper} style={getModalStyle()}>
             <h2>List Project</h2>
+            {loading && <LinearProgress />}
             <TextField fullWidth label="Project Name" value={name} onChange={this.handleNameChange} />
             <br />
             <br />
@@ -184,10 +190,10 @@ class AddProjectModal extends Component {
             <br />
             <br />
             <div style={{ textAlign: 'center' }}>
-              <Button style={btnStyles} onClick={this.handleClose} className={classes.btnCancel}>
+              <Button style={btnStyles} disabled={loading} onClick={this.handleClose} className={classes.btnCancel}>
                 Cancel
               </Button>
-              <Button style={btnStyles} onClick={this.handleSubmit} className={classes.button}>
+              <Button style={btnStyles} disabled={loading} onClick={this.handleSubmit} className={classes.button}>
                 Submit
               </Button>
             </div>
