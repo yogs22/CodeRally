@@ -2,16 +2,18 @@ import React, { Component } from 'react';
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import grey from '@material-ui/core/colors/grey';
 import AppService from '../../services/AppService';
 
-import { validateUrl } from '../../utils';
+import { validateUrl, validateRepoLink } from '../../utils';
 
 const SNACKBAR_SUCCESS_MESSAGE = 'Submitted. After a quick review, your project will be listed!';
 const SNACKBAR_FAILURE_MESSAGE = 'Project failed to be added!';
 const SNACKBAR_LINK_ERROR = 'Error validating website link!';
+const SNACKBAR_REPO_LINK_ERROR = 'Error validating repository link!';
 
 function getModalStyle() {
   const top = 50;
@@ -59,7 +61,10 @@ class AddProjectModal extends Component {
       partners: '',
       tech: '',
       link: '',
+      repoLink: '',
+      loading: false,
       showLinkError: false,
+      showRepoLinkError: false,
     };
     this.fetchProjects = props.fetchProjects;
     this.renderSnackbar = props.renderSnackbar;
@@ -68,6 +73,7 @@ class AddProjectModal extends Component {
     this.handlePartnersChange = this.handlePartnersChange.bind(this);
     this.handleTechChange = this.handleTechChange.bind(this);
     this.handleLinkChange = this.handleLinkChange.bind(this);
+    this.handleRepoLinkChange = this.handleRepoLinkChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
@@ -96,6 +102,14 @@ class AddProjectModal extends Component {
     }
   }
 
+  handleRepoLinkChange(e) {
+    if (validateRepoLink(e.target.value)) {
+      this.setState({ repoLink: e.target.value, showRepoLinkError: false });
+    } else {
+      this.setState({ repoLink: e.target.value, showRepoLinkError: true });
+    }
+  }
+
   handleClose() {
     const { modalClosed } = this.props;
     modalClosed();
@@ -104,13 +118,19 @@ class AddProjectModal extends Component {
   async handleSubmit() {
     const { renderSnackbar } = this.props;
     const {
-      showLinkError, name, description, partners, tech, link,
+      showLinkError, showRepoLinkError, name, description, partners, tech, link, repoLink,
     } = this.state;
     if (showLinkError) {
       const snackbarText = SNACKBAR_LINK_ERROR;
       renderSnackbar({ snackbarText });
       return;
     }
+    if (showRepoLinkError) {
+      const snackbarText = SNACKBAR_REPO_LINK_ERROR;
+      renderSnackbar({ snackbarText });
+      return;
+    }
+    this.setState({ loading: true });
     try {
       await AppService.postProject({
         name,
@@ -118,6 +138,7 @@ class AddProjectModal extends Component {
         partners,
         tech,
         link,
+        repoLink,
       });
       this.setState({
         name: '',
@@ -125,12 +146,15 @@ class AddProjectModal extends Component {
         partners: '',
         tech: '',
         link: '',
+        repoLink: '',
+        loading: false,
       });
       const snackbarText = SNACKBAR_SUCCESS_MESSAGE;
       renderSnackbar({ snackbarText });
       this.handleClose();
     } catch (e) {
       console.log('Failed to validate', e);
+      this.setState({ loading: false });
       const snackbarText = SNACKBAR_FAILURE_MESSAGE;
       renderSnackbar({ snackbarText });
     }
@@ -138,7 +162,7 @@ class AddProjectModal extends Component {
 
   render() {
     const {
-      name, description, partners, tech, link, showLinkError,
+      name, description, partners, tech, link, repoLink, showLinkError, showRepoLinkError, loading
     } = this.state;
     const { open, classes } = this.props;
     return (
@@ -146,6 +170,7 @@ class AddProjectModal extends Component {
         <Modal open={open} onClose={this.handleClose}>
           <div className={classes.paper} style={getModalStyle()}>
             <h2>List Project</h2>
+            {loading && <LinearProgress />}
             <TextField fullWidth label="Project Name" value={name} onChange={this.handleNameChange} />
             <br />
             <br />
@@ -161,11 +186,14 @@ class AddProjectModal extends Component {
             <TextField error={showLinkError} helperText={showLinkError ? 'Please enter a valid https url' : ''} fullWidth label="Website" value={link} onChange={this.handleLinkChange} />
             <br />
             <br />
+            <TextField error={showRepoLinkError} helperText={showRepoLinkError ? 'Please enter a valid github repo url' : ''} fullWidth label="Repo Link" value={repoLink} onChange={this.handleRepoLinkChange} />
+            <br />
+            <br />
             <div style={{ textAlign: 'center' }}>
-              <Button style={btnStyles} onClick={this.handleClose} className={classes.btnCancel}>
+              <Button style={btnStyles} disabled={loading} onClick={this.handleClose} className={classes.btnCancel}>
                 Cancel
               </Button>
-              <Button style={btnStyles} onClick={this.handleSubmit} className={classes.button}>
+              <Button style={btnStyles} disabled={loading} onClick={this.handleSubmit} className={classes.button}>
                 Submit
               </Button>
             </div>

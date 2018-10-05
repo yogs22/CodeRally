@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import Chip from '@material-ui/core/Chip';
 import Snackbar from '@material-ui/core/Snackbar';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -8,10 +9,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Paper from '@material-ui/core/Paper';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import lightBlue from '@material-ui/core/colors/lightBlue';
 import grey from '@material-ui/core/colors/grey';
+import yellow from '@material-ui/core/colors/yellow';
 import AddProjectModal from '../AddProjectModal/AddProjectModal';
 import AppService from '../../services/AppService';
 import TextField from '@material-ui/core/TextField';
@@ -43,12 +46,17 @@ const styles = theme => ({
     },
     color: lightBlue[500],
   },
+  chip: {
+    backgroundColor: yellow[500],
+    color: grey[900],
+  },
 });
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loadingProjects: true,
       modalOpen: false,
       snackbarOpen: false,
       initialProjects: [],
@@ -69,6 +77,7 @@ class Home extends Component {
     const projects = await AppService.getProjects();
     this.setState({ projects });
     this.setState({ initialProjects: projects });
+    this.setState({ loadingProjects: false });
   }
 
   addProject() {
@@ -88,7 +97,7 @@ class Home extends Component {
     }, 5000);
   }
 
-  filteredProject = (event) => {
+  filteredProjects = (event) => {
     var updatedProject = this.state.initialProjects;
     updatedProject = updatedProject.filter(function(item) {
       const query = event.target.value.toLowerCase();
@@ -100,7 +109,7 @@ class Home extends Component {
   }
 
   renderProjects() {
-    const { projects } = this.state;
+    const { projects, loadingProjects } = this.state;
     const { classes } = this.props;
 
     return (
@@ -110,7 +119,7 @@ class Home extends Component {
           className={classes.textField}
           margin="normal"
           style={{ marginLeft: '1em' }}
-          onChange={this.filteredProject}
+          onChange={this.filteredProjects}
         />
         <Table className={classes.table}>
           <TableHead>
@@ -121,20 +130,35 @@ class Home extends Component {
               <TableCell>Project Page</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {
-              projects.map(({
-                name, description, tech,
-              }) => (
-                <TableRow key={name}>
-                  <TableCell>{name}</TableCell>
-                  <TableCell>{description}</TableCell>
-                  <TableCell>{tech}</TableCell>
-                  <TableCell><Button className={classes.button} href={`/projects/${name}`}>View</Button></TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
+          {!loadingProjects && (
+            <TableBody>
+              {
+                projects.map(({
+                  name, description, tech, createdAt,
+                }) => {
+                  const currentDate = new Date();
+                  const projectDate = new Date(createdAt);
+                  const timeDiff = Math.abs(currentDate.getTime() - projectDate.getTime());
+                  const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                  return (
+                    <TableRow key={name}>
+                      {diffDays < 5
+                        ? (
+                          <TableCell>
+                            {name}
+                            <Chip className={classes.chip} label="NEW" />
+                          </TableCell>
+                        ) : <TableCell>{name}</TableCell>}
+                      <TableCell>{description}</TableCell>
+                      <TableCell>{tech}</TableCell>
+                      <TableCell><Button className={classes.button} href={`/projects/${name}`}>View</Button></TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          )}
         </Table>
+        {loadingProjects && <LinearProgress />}
       </Paper>
     );
   }
