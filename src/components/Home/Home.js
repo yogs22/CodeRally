@@ -54,13 +54,11 @@ class Home extends Component {
       initialProjects: [],
       projects: [],
       snackbarText: '',
-      query: '',
     };
     this.addProject = this.addProject.bind(this);
     this.modalClosed = this.modalClosed.bind(this);
     this.fetchProjects = this.fetchProjects.bind(this);
     this.renderSnackbar = this.renderSnackbar.bind(this);
-    this.filterProject = this.filterProject.bind(this);
   }
 
   async componentWillMount() {
@@ -90,16 +88,13 @@ class Home extends Component {
     }, 5000);
   }
 
-  filterProject(event) {
+  filteredProject = (event) => {
     var updatedProject = this.state.initialProjects;
     updatedProject = updatedProject.filter(function(item) {
       const query = event.target.value.toLowerCase();
+      const tableContent = `${item.name}${item.description}${item.tech}`;
 
-      return(
-        item.name.toLowerCase().indexOf(query) >= 0 ||
-        item.description.toLowerCase().indexOf(query) >= 0 ||
-        item.tech.toLowerCase().indexOf(query) >= 0
-      );
+      return tableContent.toLowerCase().indexOf(query) >= 0;
     });
     this.setState({projects: updatedProject});
   }
@@ -114,7 +109,8 @@ class Home extends Component {
           label="Search"
           className={classes.textField}
           margin="normal"
-          onChange={this.filterProject}
+          style={{ marginLeft: '1em' }}
+          onChange={this.filteredProject}
         />
         <Table className={classes.table}>
           <TableHead>
